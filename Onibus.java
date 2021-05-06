@@ -13,7 +13,26 @@ public class Onibus {
     Scanner ler = new Scanner(System.in);
     Scanner ler2 = new Scanner(System.in);
 
-    //inicia as informações do ônibus
+    //getters e setters
+    public int getN() {
+        return n;
+    }
+    public void setN(int n) {
+        this.n = n;
+    }
+    public int getX() {
+        return x;
+    }
+    public void setX(int x) {
+        this.x = x;
+    }
+    public int getY() {
+        return y;
+    }
+    public void setY(int y) {
+        this.y = y;
+    }
+    //inicia o trajeto do ônibus
     public void iniciarOnibus() {
         System.out.printf("Quantidade de pessoas sentadas: ");
         x = ler.nextInt();
@@ -23,8 +42,8 @@ public class Onibus {
         n = ler.nextInt();
 
         System.out.printf("O ônibus tem capacidade máxima para %d pessoas sentadas mais %d pessoas em pé. e percorre uma linha com %d pontos.\n", x, y, n);
+        
         total = x + y;
-
         for(int i = 1; i <= n; i++){
             System.out.println("\n***************************************");
             System.out.println("1 - Entrar passageiro.");
@@ -33,34 +52,37 @@ public class Onibus {
             System.out.printf("O que deseja fazer na proxima parada: ");
             int opcao = ler2.nextInt();
 
+            //opção 1 - conta o tipo de bilhete utilizado e a entrada do passageiro
             if(opcao == 1){
                 System.out.printf("\nQual o bilhete do passageiro (1 - normal, 2 - estudante, 3 - idoso): ");
                 bilhete = ler2.nextInt();
                 if (bilhete == 1) {
-                    normal = contarTipoBilhete(bilhete, normal, estudante, idoso, total, pessoas);
+                    normal = contarTipoBilhete(bilhete, normal, estudante, idoso, total, pessoas, opcao);
                 }
                 if (bilhete == 2) {
-                    estudante = contarTipoBilhete(bilhete, normal, estudante, idoso, total, pessoas);
+                    estudante = contarTipoBilhete(bilhete, normal, estudante, idoso, total, pessoas, opcao);
                 }
                 if (bilhete == 3) {
-                    idoso = contarTipoBilhete(bilhete, normal, estudante, idoso, total, pessoas);
+                    idoso = contarTipoBilhete(bilhete, normal, estudante, idoso, total, pessoas, opcao);
                 }
 
                 pessoas = entrar(x, pessoas, total);
                 System.out.println("***************************************\n");
                 voltas = numeroViagens(n, i, voltas); 
             }
+            //opção 2 - remove um passageiro do ônibus
             if(opcao == 2){
                 pessoas = sair(total, pessoas);
                 System.out.println("***************************************\n");
                 voltas = numeroViagens(n, i, voltas);
             }
+            //opção 3 - o passageiro pede para descer do ônibus
             if(opcao == 3){
-                pessoas = pedirDescer(y, x, pessoas);
+                pessoas = pedirDescer(total, pessoas);
                 System.out.println("***************************************\n");
                 voltas = numeroViagens(n, i, voltas);
             }
-            if(voltas == 8){
+            if(voltas == 8){//Em média um motorista de ônibus da 8 voltar no seu percurso
                 break;
             }else{
                 if(i == n){
@@ -102,7 +124,7 @@ public class Onibus {
     }
 
     //Conta os tipos de bilhetes utilizados
-    public int contarTipoBilhete(int b, int normal, int estu, int idoso, int total, int p) {
+    public int contarTipoBilhete(int b, int normal, int estu, int idoso, int total, int p, int op) {
         if(p < total){
             if(b == 1){
                 normal++;
@@ -112,7 +134,7 @@ public class Onibus {
             if(b == 2){
                 estu++;
                 System.out.println("\nBilhetes de estudante: " + estu);
-                return estudante;
+                return estu;
             }
             if(b == 3){
                 idoso++;
@@ -126,8 +148,10 @@ public class Onibus {
     }
 
     //Um passageiro pede para descer do ônibus
-    public int pedirDescer(int y, int x, int p) {
-        System.out.println("\nUm passageiro deseja descer do ônibus.");
+    public int pedirDescer(int total, int p) {
+        if(p != 0){
+            System.out.println("\nUm passageiro deseja descer do ônibus.");
+        }
         int pessoas = sair(total, p);
 
         return pessoas;
